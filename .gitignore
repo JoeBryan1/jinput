@@ -1,0 +1,8 @@
+.vs
+out
+project/.godot
+project/bin/*
+!project/bin/jinput.gdextension
+*.import
+*.o
+*.dblite

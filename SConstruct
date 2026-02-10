@@ -1,0 +1,39 @@
+#!/usr/bin/env python
+import os
+import sys
+
+# You can find documentation for SCons and SConstruct files at:
+# https://scons.org/documentation.html
+
+# This lets SCons know that we're using godot-cpp, from the godot-cpp folder.
+env = SConscript("godot-cpp/SConstruct")
+
+# Configures the 'src' directory as a source for header files.
+env.Append(CPPPATH=["src/"])
+
+def get_sources_recursive(directory):
+    sources = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.cpp'):
+                sources.append(os.path.join(root, file))
+    return sources
+
+sources = get_sources_recursive("src")
+
+# The filename for the dynamic library for this GDExtension.
+# $SHLIBPREFIX is a platform specific prefix for the dynamic library ('lib' on Unix, '' on Windows).
+# $SHLIBSUFFIX is the platform specific suffix for the dynamic library (for example '.dll' on Windows).
+# env["suffix"] includes the build's feature tags (e.g. '.windows.template_debug.x86_64')
+# (see https://docs.godotengine.org/en/stable/tutorials/export/feature_tags.html).
+# The final path should match a path in the '.gdextension' file.
+lib_filename = "{}jinput{}{}".format(env.subst('$SHLIBPREFIX'), env["suffix"], env.subst('$SHLIBSUFFIX'))
+
+# Creates a SCons target for the path with our sources.
+library = env.SharedLibrary(
+    "project/bin/{}".format(lib_filename),
+    source=sources,
+)
+
+# Selects the shared library as the default target.
+Default(library)
