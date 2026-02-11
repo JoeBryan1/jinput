@@ -1,8 +1,9 @@
 #pragma once
 
 #include <godot_cpp/classes/editor_plugin.hpp>
-#include <godot_cpp/classes/button.hpp>
-#include <godot_cpp/classes/v_box_container.hpp>
+#include <godot_cpp/classes/editor_interface.hpp>
+#include "jinput_action_inspector.h"
+#include "jinput_action_window.h"
 
 namespace godot {
 
@@ -10,22 +11,16 @@ namespace godot {
 		GDCLASS(JInputEditor, EditorPlugin)
 
 	private:
-		VBoxContainer* dock;
-		Button* button;
+		JInputActionInspector* inspector_plugin;
+		JInputActionWindow* editor_window;
 
 	protected:
 		static void _bind_methods();
 
 	public:
 		JInputEditor();
-		~JInputEditor() override;
 
 		void _enter_tree() override;
 		void _exit_tree() override;
-
-		void _enable_plugin() override;
-
-		void _on_button_pressed();
-
 	};
 }
